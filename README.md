@@ -1,17 +1,14 @@
 # Media Trimmer Tool (PyQt5 + VLC)
 
-A simple desktop video trimmer built with **PyQt5**, **python-vlc**, and **ffmpeg**. This tool allows users to load videos, jump to specific timestamps, set start and end trim points, and export trimmed video segments.
+A simple desktop media trimmer/converter built with **PyQt5**, **python-vlc**, and **ffmpeg**. This tool is built so I may save some time when searching for a website to trimmer/convert my media file.   
+This project should support all video/audio format files. Please leave an issue if some of the format is not supported
 
 ---
 
 ## Features
 - Load and play video files.
-- Input timestamp (HH:MM:SS.MS) to jump to a specific time.
-- Set start and end trim points from user inputs.
 - Trim and export video clips using ffmpeg.
-- Avoid overwriting by auto-numbering output files.
-- Simple and minimal UI.
-
+- convert media file to other format
 ---
 
 ## Requirements
@@ -25,22 +22,30 @@ A simple desktop video trimmer built with **PyQt5**, **python-vlc**, and **ffmpe
 ---
 
 ## Installation & Setup
-
-### Clone the Repository
+### 1. Download/Run the exe
 ```bash
+download media_trimmer in the release folder
+run media_trimmer.exe
+```
+### 2. Run the code
+
+#### Prerequisite
+```bash
+Download and Install Download VLC: https://www.videolan.org/vlc/
+Download and Install Download FFmpeg: https://ffmpeg.org/download.html
+```
+#### Clone the Repository
+```bash
+
 git clone https://github.com/yourusername/media-trimmer.git
 cd media-trimmer
-python -m venv venv
-# Windows:
-venv\Scripts\activate
-# Mac/Linux:
-source venv/bin/activate
 
-python -m venv venv
-# Windows:
+#setup virtual env. this can be different for different os
 venv\Scripts\activate
-# Mac/Linux:
-source venv/bin/activate
+pip install PyQt5 python-vlc
+```
 
-## Runing the application
+#### Run the application
+```bash
 python src/media_trimmer/main.py
+```
