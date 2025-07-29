@@ -12,8 +12,7 @@ class Ui_MainWindow:
 
         # Create widgets
         self.video_frame = QWidget(MainWindow)
-        self.play_button = QPushButton("Play", MainWindow)
-        self.pause_button = QPushButton("Pause", MainWindow)
+        self.play_pause_button = QPushButton("Play/Pause", MainWindow) 
         self.load_button = QPushButton("Load Video", MainWindow)
         self.status_label = QLabel("Status: Ready", MainWindow)
         
@@ -21,14 +20,12 @@ class Ui_MainWindow:
         self.current_time_label = QLabel("Current Time: 00:00", MainWindow)
         self.total_time_label = QLabel("Total Time: 00:00", MainWindow)
         
-        # Slider
-        self.slider = QSlider(Qt.Horizontal, MainWindow)
 
         # Layout for control buttons
         controls = QHBoxLayout()
+        controls.addWidget(self.play_pause_button)
         controls.addWidget(self.load_button)
-        controls.addWidget(self.play_button)
-        controls.addWidget(self.pause_button)
+   
 
         # Layout for time labels
         time_layout = QHBoxLayout()
@@ -37,8 +34,9 @@ class Ui_MainWindow:
 
         # Main layout
         layout = QVBoxLayout()
-        layout.addLayout(controls)
+ 
         layout.addWidget(self.video_frame)
+        layout.addLayout(controls)
         layout.addLayout(time_layout)
         layout.addWidget(self.status_label)
 
