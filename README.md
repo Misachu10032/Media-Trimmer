@@ -36,8 +36,8 @@ Run the executable media_trimmer.exe
 #### Prerequisite
 
 ```bash
-Download and Install Download VLC: https://www.videolan.org/vlc/
-Download and Install Download FFmpeg: https://ffmpeg.org/download.html
+Download and Install VLC: https://www.videolan.org/vlc/
+Download and Install FFmpeg: https://ffmpeg.org/download.html
 ```
 
 #### Clone the Repository
