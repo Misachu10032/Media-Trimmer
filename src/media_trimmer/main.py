@@ -1,10 +1,11 @@
+import os
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog
 from PyQt5.QtCore import QTimer
 from media_trimmer.ui_mainwindow import Ui_MainWindow
 from media_trimmer.player_widget import VLCPlayer
-from media_trimmer.trimmer import trim_video
-import re
+from media_trimmer.trimmer import trim_video as perform_trim_subprocess
+
 
 
 class MediaTrimmerApp(QMainWindow):
@@ -26,17 +27,30 @@ class MediaTrimmerApp(QMainWindow):
         self.ui.jump_button.clicked.connect(self.jump_to_time)
         self.ui.set_start_time_button.clicked.connect(self.set_start_time)
         self.ui.set_end_time_button.clicked.connect(self.set_end_time)
+        self.ui.reset_time_button.clicked.connect(self.reset_time_inputs)
+        self.ui.trim_button.clicked.connect(self.trim_video)
+
         self.trim_start_ms = 0
         self.trim_end_ms = 0
-        self.ui.reset_time_button.clicked.connect(self.reset_time_inputs)
-
-
+        self.loaded_video_path = ""
+        self.loaded_video_dir = ""
+        self.loaded_video_name = ""
+        self.loaded_video_basename = ""
 
     def load_video(self):
         # Open file dialog to load a video file
         filename, _ = QFileDialog.getOpenFileName(self, "Select Video")
         if filename:
-            self.ui.status_label.setText(f"Loaded: {filename}")
+            self.loaded_video_path = filename  # Full path to the file
+            self.loaded_video_dir = os.path.dirname(filename)  # Folder path
+            self.loaded_video_name = os.path.basename(
+                filename
+            )  # File name with extension
+            self.loaded_video_basename = os.path.splitext(self.loaded_video_name)[
+                0
+            ]  # File name without extension
+
+            self.ui.status_label.setText(f"Loaded: {self.loaded_video_name}")
             self.player.set_media(filename)
 
     def update_time_labels(self, current_time, total_time):
@@ -98,6 +112,7 @@ class MediaTrimmerApp(QMainWindow):
             )
         except ValueError:
             self.ui.status_label.setText("Invalid input. Please enter numbers.")
+
     def set_start_time(self):
         """Capture user input as trim start time."""
         total_time_ms = self.get_time_from_inputs()
@@ -115,6 +130,7 @@ class MediaTrimmerApp(QMainWindow):
             formatted_time = self.format_time(total_time_ms)
             self.ui.trim_end_time.setText(f"Trim End Time: {formatted_time}")
             self.ui.status_label.setText("End time set.")
+
     def reset_time_inputs(self):
         """Reset all time input fields to 0."""
         self.ui.hour_input.setText("0")
@@ -122,6 +138,26 @@ class MediaTrimmerApp(QMainWindow):
         self.ui.second_input.setText("0")
         self.ui.millisecond_input.setText("0")
         self.ui.status_label.setText("Time inputs reset to 0.")
+
+    def trim_video(self):
+        if not self.loaded_video_path:
+            self.ui.status_label.setText("No video loaded.")
+            return
+
+        if self.trim_end_ms <= self.trim_start_ms:
+            self.ui.status_label.setText("Invalid trim range.")
+            return
+
+        # Call trimmer function
+
+        output_path = perform_trim_subprocess(
+            input_file=self.loaded_video_path,
+            output_dir=self.loaded_video_dir,
+            base_name=self.loaded_video_basename,
+            start_time_ms=self.trim_start_ms,
+            end_time_ms=self.trim_end_ms,
+        )
+        self.ui.status_label.setText(f"Trimmed video saved: {output_path}")
 
 
 def main():
