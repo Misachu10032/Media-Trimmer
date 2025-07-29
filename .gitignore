@@ -1,0 +1,51 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+
+# PyInstaller build folders
+build/
+dist/
+*.spec
+
+# IDE files
+.idea/
+.vscode/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Compiled C extensions
+*.so
+*.pyd
+*.dll
+
+# FFMPEG binary (optional if not in repo)
+ffmpeg.exe
+
+# Python cache
+.pytest_cache/
+coverage.xml
+
+# Backup files
+*.bak
+*.swp
+
+# User specific settings
+*.user
+
+# Ignore media files (optional)
+*.mp4
+*.avi
+*.mkv
+
+# Ignore trimmed output files
+*_trimmed*.mp4
