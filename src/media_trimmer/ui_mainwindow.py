@@ -80,7 +80,36 @@ class Ui_MainWindow:
         self.jump_button = QPushButton("Jump")
         self.jump_button.setFixedWidth(50)
         jump_layout.addWidget(self.jump_button)
+
+        # set time Buttons
+        self.set_start_time_button = QPushButton("Set as start time")
+        self.set_start_time_button.setFixedWidth(100)
+        jump_layout.addWidget(self.set_start_time_button)
+        self.set_end_time_button = QPushButton("Set as end time")
+        self.set_end_time_button.setFixedWidth(100)
+        jump_layout.addWidget(self.set_end_time_button)
+        self.reset_time_button = QPushButton("clear")
+        self.reset_time_button.setFixedWidth(100)
+        jump_layout.addWidget(self.reset_time_button)
         jump_layout.addStretch(1)
+
+
+
+        # triming function layout
+        trim_layout = QHBoxLayout()
+        self.trim_start_time = QLabel("Trim Start Time: 0:00:00:00", MainWindow)
+        self.trim_start_time.setFixedWidth(150)
+        trim_layout.addWidget( self.trim_start_time)
+        self.trim_end_time = QLabel("Trim End Time:  0:00:00:00", MainWindow)
+        self.trim_end_time.setFixedWidth(150)
+        trim_layout.addWidget( self.trim_end_time)
+
+        self.trim_button = QPushButton("Trim")
+        self.trim_button.setFixedWidth(50)
+        trim_layout.addWidget(self.trim_button)
+        trim_layout.addStretch(1)
+
+
 
 
         # Layout for time labels
@@ -95,7 +124,10 @@ class Ui_MainWindow:
         layout.addLayout(controls)
         layout.addLayout(time_layout)
         layout.addLayout(jump_layout)
+        layout.addLayout(trim_layout)
+
         layout.addWidget(self.status_label)
+
 
         central_widget = QWidget(MainWindow)
         central_widget.setLayout(layout)

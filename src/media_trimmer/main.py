@@ -24,6 +24,13 @@ class MediaTrimmerApp(QMainWindow):
         self.ui.load_button.clicked.connect(self.load_video)
         self.ui.play_pause_button.clicked.connect(self.player.toggle_play_pause)
         self.ui.jump_button.clicked.connect(self.jump_to_time)
+        self.ui.set_start_time_button.clicked.connect(self.set_start_time)
+        self.ui.set_end_time_button.clicked.connect(self.set_end_time)
+        self.trim_start_ms = 0
+        self.trim_end_ms = 0
+        self.ui.reset_time_button.clicked.connect(self.reset_time_inputs)
+
+
 
     def load_video(self):
         # Open file dialog to load a video file
@@ -53,33 +60,68 @@ class MediaTrimmerApp(QMainWindow):
         milliseconds = time_in_ms % 1000  # Get milliseconds part
 
         return f"{int(hours)}:{int(minutes):02}:{int(seconds):02}.{int(milliseconds / 10):02}"
-    def jump_to_time(self):
-        """Get time from input fields and jump to the specified time."""
+
+    def get_time_from_inputs(self):
+        """Helper function to extract time from input fields and convert to milliseconds."""
         try:
             hours = int(self.ui.hour_input.text() or 0)
             minutes = int(self.ui.minute_input.text() or 0)
             seconds = int(self.ui.second_input.text() or 0)
             milliseconds = int(self.ui.millisecond_input.text() or 0)
 
+            # Convert time to milliseconds
             total_time_ms = (
                 hours * 3600 + minutes * 60 + seconds
             ) * 1000 + milliseconds
+            return total_time_ms
+        except ValueError:
+            self.ui.status_label.setText("Invalid input. Please enter numbers.")
+            return None
 
+    def jump_to_time(self):
+        """Get time from input fields and jump to the specified time."""
+        try:
+            total_time_ms = self.get_time_from_inputs()
             # Ensure media is playing (seek won't work if stopped)
-            print(total_time_ms,"_____-------------")
+            print(total_time_ms, "_____-------------")
             if not self.player.mediaplayer.is_playing():
                 self.player.mediaplayer.play()
                 # Delay the seek slightly to let VLC start playback
-                QTimer.singleShot(200, lambda: self.player.mediaplayer.set_time(total_time_ms))
+                QTimer.singleShot(
+                    200, lambda: self.player.mediaplayer.set_time(total_time_ms)
+                )
             else:
                 self.player.mediaplayer.set_time(total_time_ms)
 
             self.ui.status_label.setText(
-                f"Jumped to: {hours:02}:{minutes:02}:{seconds:02}.{milliseconds:02}"
-        )
+                f"Jumped to: {self.format_time(total_time_ms)}"
+            )
         except ValueError:
             self.ui.status_label.setText("Invalid input. Please enter numbers.")
+    def set_start_time(self):
+        """Capture user input as trim start time."""
+        total_time_ms = self.get_time_from_inputs()
+        if total_time_ms is not None:
+            self.trim_start_ms = total_time_ms  # Save start time
+            formatted_time = self.format_time(total_time_ms)
+            self.ui.trim_start_time.setText(f"Trim Start Time: {formatted_time}")
+            self.ui.status_label.setText("Start time set.")
 
+    def set_end_time(self):
+        """Capture user input as trim end time."""
+        total_time_ms = self.get_time_from_inputs()
+        if total_time_ms is not None:
+            self.trim_end_ms = total_time_ms  # Save end time
+            formatted_time = self.format_time(total_time_ms)
+            self.ui.trim_end_time.setText(f"Trim End Time: {formatted_time}")
+            self.ui.status_label.setText("End time set.")
+    def reset_time_inputs(self):
+        """Reset all time input fields to 0."""
+        self.ui.hour_input.setText("0")
+        self.ui.minute_input.setText("0")
+        self.ui.second_input.setText("0")
+        self.ui.millisecond_input.setText("0")
+        self.ui.status_label.setText("Time inputs reset to 0.")
 
 
 def main():
