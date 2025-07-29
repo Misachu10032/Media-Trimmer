@@ -1,35 +1,47 @@
-# PyQt5 UI layout code
 from PyQt5.QtWidgets import QMainWindow, QPushButton, QVBoxLayout, QWidget, QFileDialog, QLabel, QSlider, QHBoxLayout
+from PyQt5.QtCore import Qt
 
-class Ui_MainWindow(QMainWindow):
-    def __init__(self):
-        super().__init__()
-        self.setWindowTitle("Media Trimmer Tool")
-        self.setGeometry(100, 100, 800, 600)
 
-        self.video_frame = QWidget(self)
-        self.play_button = QPushButton("Play")
-        self.pause_button = QPushButton("Pause")
-        self.load_button = QPushButton("Load Video")
-        self.trim_button = QPushButton("Trim Selection")
-        self.status_label = QLabel("Status: Ready")
+class Ui_MainWindow:
+    def __init__(self, MainWindow):
+        self.setup_ui(MainWindow)
+
+    def setup_ui(self, MainWindow):
+        MainWindow.setWindowTitle("Media Trimmer Tool")
+        MainWindow.setGeometry(100, 100, 800, 600)
+
+        # Create widgets
+        self.video_frame = QWidget(MainWindow)
+        self.play_button = QPushButton("Play", MainWindow)
+        self.pause_button = QPushButton("Pause", MainWindow)
+        self.load_button = QPushButton("Load Video", MainWindow)
+        self.status_label = QLabel("Status: Ready", MainWindow)
         
-        self.slider = QSlider()
-        self.slider.setOrientation(1)  # Horizontal slider
+        # Time labels
+        self.current_time_label = QLabel("Current Time: 00:00", MainWindow)
+        self.total_time_label = QLabel("Total Time: 00:00", MainWindow)
+        
+        # Slider
+        self.slider = QSlider(Qt.Horizontal, MainWindow)
 
-        # Layout
+        # Layout for control buttons
         controls = QHBoxLayout()
         controls.addWidget(self.load_button)
         controls.addWidget(self.play_button)
         controls.addWidget(self.pause_button)
-        controls.addWidget(self.trim_button)
 
+        # Layout for time labels
+        time_layout = QHBoxLayout()
+        time_layout.addWidget(self.current_time_label)
+        time_layout.addWidget(self.total_time_label)
+
+        # Main layout
         layout = QVBoxLayout()
-        layout.addWidget(self.video_frame)
-        layout.addWidget(self.slider)
         layout.addLayout(controls)
+        layout.addWidget(self.video_frame)
+        layout.addLayout(time_layout)
         layout.addWidget(self.status_label)
 
-        central_widget = QWidget()
+        central_widget = QWidget(MainWindow)
         central_widget.setLayout(layout)
-        self.setCentralWidget(central_widget)
+        MainWindow.setCentralWidget(central_widget)
