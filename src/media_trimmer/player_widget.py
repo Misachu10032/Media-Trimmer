@@ -14,7 +14,7 @@ class VLCPlayer(QObject):
         self.status_label = status_label
 
         self.timer = QTimer()
-        self.timer.setInterval(200)
+        self.timer.setInterval(100)
         self.timer.timeout.connect(self.update_time)  # <-- Connect timer to updater
 
     def set_media(self, filepath):
